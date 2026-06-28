@@ -642,8 +642,24 @@ footer span { color: var(--gold); }
 }
 .img-modal-content img {
     max-width: 100%; max-height: 85vh; display: block;
-    transform: rotate(0deg); transition: transform 0.25s ease;
+    transform: rotate(0deg); transition: transform 0.12s ease;
 }
+
+/* 3D cinematic rotation wrapper */
+.img-rotate-wrap {
+    transform-style: preserve-3d;
+    will-change: transform;
+    animation: cinematic-rotate 10s linear infinite;
+    transition: transform 0.2s ease;
+}
+.img-rotate-wrap:hover { animation-play-state: paused; }
+
+@keyframes cinematic-rotate {
+    from { transform: rotate3d(1, 1, 0, 0deg); }
+    to   { transform: rotate3d(1, 1, 0, 360deg); }
+}
+
+.img-modal { perspective: 1000px; }
 .img-modal-close {
     position: absolute; top: 12px; right: 12px; width: 40px; height: 40px;
     background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; display:flex; align-items:center; justify-content:center;

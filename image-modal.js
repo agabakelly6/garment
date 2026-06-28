@@ -19,7 +19,9 @@
         <div class="img-modal-caption" id="img-modal-caption"></div>
         <div class="img-modal-content">
           <button class="img-modal-close" id="img-modal-close" aria-label="Close">✕</button>
-          <img id="img-modal-img" src="" alt="">
+          <div class="img-rotate-wrap">
+            <img id="img-modal-img" src="" alt="">
+          </div>
         </div>
         <div class="img-modal-actions">
           <div class="img-modal-price" id="img-modal-price"></div>
@@ -43,6 +45,7 @@
     const closeBtn = document.getElementById('img-modal-close');
     const overlayEl = overlay;
     const imgEl = document.getElementById('img-modal-img');
+    const rotateWrap = overlayEl.querySelector('.img-rotate-wrap');
     const rotLeft = document.getElementById('img-rot-left');
     const rotRight = document.getElementById('img-rot-right');
     const caption = document.getElementById('img-modal-caption');
@@ -71,11 +74,22 @@
     rotLeft.addEventListener('click', ()=> rotate(-90));
     rotRight.addEventListener('click', ()=> rotate(90));
 
+    let zoomActive = false;
+    let zoomOrigin = {x: '50%', y: '50%'};
+    const zoomScale = 2;
+
+    function applyImageTransform(){
+      const base = parseInt(imgEl.dataset.rotate || '0', 10) || 0;
+      const scale = zoomActive ? zoomScale : 1;
+      imgEl.style.transformOrigin = `${zoomOrigin.x} ${zoomOrigin.y}`;
+      imgEl.style.transform = `rotate(${base}deg) scale(${scale})`;
+    }
+
     function rotate(delta){
       const cur = parseInt(imgEl.dataset.rotate || '0', 10);
       const next = cur + delta;
       imgEl.dataset.rotate = next;
-      imgEl.style.transform = `rotate(${next}deg)`;
+      applyImageTransform();
     }
 
     // size selection
@@ -98,10 +112,36 @@
     orderBtn.addEventListener('click', ()=>{
       const name = caption.textContent || '';
       const size = selectedSize || 'M';
-      const phone = '256702587863';
+      const phone = '256704902146';
       const text = `Hi, I want to buy ${name} in size ${size}`;
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
+    });
+
+    // pointer / hover interactions for cinematic pause + zoom loupe
+    function onPointerMove(e){
+      const rect = rotateWrap.getBoundingClientRect();
+      const px = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const py = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+      // transform-origin as percentage
+      zoomOrigin.x = (px * 100) + '%';
+      zoomOrigin.y = (py * 100) + '%';
+      applyImageTransform();
+    }
+
+    rotateWrap.addEventListener('pointerenter', (e)=>{
+      zoomActive = true;
+      rotateWrap.style.animationPlayState = 'paused';
+      // start tracking pointer
+      window.addEventListener('pointermove', onPointerMove);
+    });
+    rotateWrap.addEventListener('pointerleave', (e)=>{
+      zoomActive = false;
+      rotateWrap.style.animationPlayState = 'running';
+      // reset origin
+      zoomOrigin = {x: '50%', y: '50%'};
+      applyImageTransform();
+      window.removeEventListener('pointermove', onPointerMove);
     });
 
     // expose open function
@@ -124,7 +164,7 @@
         }
         priceEl.textContent = priceText;
         imgEl.dataset.rotate = 0;
-        imgEl.style.transform = 'rotate(0deg)';
+        applyImageTransform();
         overlayEl.classList.add('open');
         document.body.style.overflow = 'hidden';
       }
