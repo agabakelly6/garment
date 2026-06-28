@@ -623,3 +623,60 @@ footer span { color: var(--gold); }
     body { padding-bottom: 72px; }
     .wa-float { display: none; }
 }
+
+/* ── IMAGE MODAL ── */
+.img-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1200; padding: 20px; visibility: hidden; opacity: 0;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.img-modal-overlay.open { visibility: visible; opacity: 1; }
+.img-modal {
+    position: relative; max-width: 1200px; width: 100%; max-height: 95vh;
+    display: flex; align-items: center; justify-content: center;
+}
+.img-modal-content {
+    position: relative; background: transparent; border-radius: 8px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.img-modal-content img {
+    max-width: 100%; max-height: 85vh; display: block;
+    transform: rotate(0deg); transition: transform 0.25s ease;
+}
+.img-modal-close {
+    position: absolute; top: 12px; right: 12px; width: 40px; height: 40px;
+    background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; display:flex; align-items:center; justify-content:center;
+    font-size: 18px; cursor: pointer; z-index: 5; border: 1px solid rgba(255,255,255,0.08);
+}
+.img-modal-controls {
+    position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; z-index: 5;
+}
+.img-modal-controls button {
+    background: rgba(255,255,255,0.06); color: #fff; border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight:700;
+}
+.img-modal-caption {
+    position: absolute; top: 18px; left: 18px; color: #fff; font-weight:600; font-size: 0.95rem; z-index:5;
+}
+.img-modal-help { font-size: 0.8rem; opacity: 0.9; }
+
+/* Modal actions: price, size selector, order button */
+.img-modal-actions {
+    position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center; z-index: 5; flex-wrap: wrap;
+}
+.img-modal-price { color: #fff; background: rgba(0,0,0,0.28); padding: 8px 12px; border-radius: 8px; font-weight:700; }
+.img-size-group { display: flex; gap: 8px; }
+.img-size-btn {
+    background: rgba(255,255,255,0.06); color: #fff; border: 1px solid rgba(255,255,255,0.08);
+    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-weight:700; font-size:0.9rem;
+}
+.img-size-btn.active { background: var(--gold); color: var(--green-deep); border-color: rgba(0,0,0,0.06); }
+.img-order-btn {
+    background: #25D366; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight:800;
+    box-shadow: 0 6px 18px rgba(37,211,102,0.18);
+}
+
+
